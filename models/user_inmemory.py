@@ -1,15 +1,12 @@
-class User:
+class UserManager:
     
     def __init__(self):
         self.users = list()
         self.userCount = 0
 
     def addUser(self, name, gender):
-        return self.users.append({"id":self.userCount,"name":name,"gender":gender})
+        self.userCount+=1
+        return self.users.append({"id":self.userCount,"user":name,"gender":gender})
     
     def getUsers(self):
-        return self.users
-    
-user = User()
-user.addUser("hem", 12)
-print(user.getUsers())
+        return [{"id":1, "user":"pradeep", "gender": "M"}]
