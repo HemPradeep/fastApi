@@ -8,3 +8,6 @@ class UserResponse(BaseModel):
 class CreateUser(BaseModel):
     user: str
     gender: str
+
+class UpdateUserName(BaseModel):
+    user: str
