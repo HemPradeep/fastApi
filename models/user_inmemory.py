@@ -28,4 +28,8 @@ class UserManager:
     def deleteAUser(self, id):
         index = self.getIndexById(id)
         self.users.pop(index)
+
+    def getUserById(self, id):
+        index = self.getIndexById(id)
+        return self.users.__getitem__(index)
         

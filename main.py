@@ -9,6 +9,10 @@ manager = UserManager()
 def getUsers():
     return manager.getUsers()
 
+@app.get("/api/users/{id}", response_model=UserResponse,status_code=status.HTTP_200_OK)
+def getUserById(id:int):
+    return manager.getUserById(id)
+
 @app.post("/api/users", response_model=UserResponse, status_code=status.HTTP_201_CREATED)
 def addAUser(userData: CreateUser):
     return manager.addUser(userData.user, userData.gender)
