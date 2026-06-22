@@ -4,6 +4,10 @@ class UserManager:
         self.users = list()
         self.userCount = 0
 
+    def doesUserExists(self,id):
+        index = self.getIndexById(id)
+        return type(index) == int
+
     def addUser(self, name, gender):
         self.userCount+=1
         userRecord = {"id":self.userCount,"user":name,"gender":gender}
