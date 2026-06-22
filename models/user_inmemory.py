@@ -36,4 +36,4 @@ class UserManager:
     def getUserById(self, id):
         index = self.getIndexById(id)
         return self.users.__getitem__(index)
-        
+    
