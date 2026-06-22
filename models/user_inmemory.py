@@ -14,11 +14,18 @@ class UserManager:
         return self.users
     
     def editUserData(self, id, user):
-        index = next(
-    (i for i, user in enumerate(self.users) if user["id"] == id),
-    None
-    )
+        index = self.getIndexById(id)
         userData = self.users.__getitem__(index)
         userData["user"] = user
         return self.users.__getitem__(index)
     
+    def getIndexById(self,id):
+        return next(
+    (i for i, user in enumerate(self.users) if user["id"] == id),
+    None
+    )
+    
+    def deleteAUser(self, id):
+        index = self.getIndexById(id)
+        self.users.pop(index)
+        
