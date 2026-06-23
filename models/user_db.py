@@ -53,5 +53,5 @@ class UserDataManager:
         return self.get_user_by_id(user_id)
 
     def delete_user(self, user_id):
-        self.cursor.execute(UserQueries.DELETE_USER.value, (str(user_id)))
+        self.cursor.execute(UserQueries.DELETE_USER.value, (str(user_id),))
         self.conn.commit()

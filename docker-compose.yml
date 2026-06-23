@@ -1,0 +1,15 @@
+services:
+  api:
+    build: .
+    ports:
+      - "8000:8000"
+    depends_on:
+      [postgres]
+    
+
+  postgres:
+    image: postgres:17
+    environment:
+      - DB_USER=testuser
+      - PASSWORD=password
+      - DB_NAME=userdb
