@@ -1,23 +1,18 @@
 from .queries import UserQueries
-import os
-import psycopg2
 from dotenv import load_dotenv
 
 load_dotenv()
 
 
-class UserDataManager:
-    def __init__(self):
-        self.conn = psycopg2.connect(
-            host=os.getenv("DB_HOST"),
-            port=int(os.getenv("DB_PORT")),
-            database=os.getenv("DB_NAME"),
-            user=os.getenv("DB_USER"),
-            password=os.getenv("PASSWORD"),
-        )
+class UserRepository:
+    def __init__(self, conn):
+        self.conn = conn
         self.cursor = self.conn.cursor()
         self.create_user_table()
-
+        
+    def reset_db(self):
+        self.cursor.execute(UserQueries.TRUNCATE_DATA.value)
+        
     def create_user_table(self):
         self.cursor.execute(UserQueries.CREATE_TABLE.value)
         self.conn.commit()
