@@ -1,39 +1,42 @@
 class UserManager:
 
     def __init__(self):
-        self.users = list()
-        self.userCount = 0
+        self.users = []
+        self.user_count = 0
 
-    def doesUserExists(self,id):
-        index = self.getIndexById(id)
-        return type(index) == int
+    def get_index_by_id(self, user_id):
+        return next(
+            (i for i, user in enumerate(self.users) if user["id"] == user_id),
+            None
+        )
 
-    def addUser(self, name, gender):
-        self.userCount+=1
-        userRecord = {"id":self.userCount,"user":name,"gender":gender}
-        self.users.append(userRecord)
-        return self.users.__getitem__(-1)
+    def does_user_exist(self, user_id):
+        return isinstance(self.get_index_by_id(user_id), int)
+
+    def add_a_user(self, name, gender):
+        self.user_count += 1
+        user_record = {"id": self.user_count, "user": name, "gender": gender}
+        self.users.append(user_record)
+        return self.users[-1]
     
-    def getUsers(self):
+    def get_all_users(self):
         return self.users
     
-    def editUserData(self, id, user):
-        index = self.getIndexById(id)
-        userData = self.users.__getitem__(index)
-        userData["user"] = user
-        return self.users.__getitem__(index)
-    
-    def getIndexById(self,id):
-        return next(
-    (i for i, user in enumerate(self.users) if user["id"] == id),
-    None
-    )
-    
-    def deleteAUser(self, id):
-        index = self.getIndexById(id)
-        self.users.pop(index)
+    def get_user_by_id(self, user_id):
+        index = self.get_index_by_id(user_id)
+        if index is None:
+            return None
+        return self.users[index]
 
-    def getUserById(self, id):
-        index = self.getIndexById(id)
-        return self.users.__getitem__(index)
+    def update_user_name(self, user_id, name):
+        index = self.get_index_by_id(user_id)
+        if index is None:
+            return None
+        self.users[index]["user"] = name
+        return self.users[index]
+    
+    def delete_user(self, user_id):
+        index = self.get_index_by_id(user_id)
+        if index is not None:
+            self.users.pop(index)
     
