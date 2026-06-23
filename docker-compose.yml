@@ -5,11 +5,26 @@ services:
       - "8000:8000"
     depends_on:
       [postgres]
-    
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USER: testuser
+      PASSWORD: password
+      DB_NAME: userdb
+    restart: unless-stopped
 
   postgres:
     image: postgres:17
+    ports:
+      - "5432:5432"
     environment:
-      - DB_USER=testuser
-      - PASSWORD=password
-      - DB_NAME=userdb
+      POSTGRES_USER: testuser
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: userdb
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+    driver: local
