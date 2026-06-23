@@ -22,7 +22,7 @@ class UserDataManager:
         self.cursor.execute(UserQueries.CREATE_TABLE.value)
         self.conn.commit()
     
-    def _row_to_user(self, row):
+    def convert_row_to_user(self, row):
         if not row:
             return None
         return {"id": row[0], "user": row[1], "gender": row[2]}
@@ -30,11 +30,11 @@ class UserDataManager:
     def get_all_users(self):
         self.cursor.execute(UserQueries.GET_ALL_USERS.value)
         rows = self.cursor.fetchall()
-        return [self._row_to_user(row) for row in rows]
+        return [self.convert_row_to_user(row) for row in rows]
     
     def get_user_by_id(self, user_id):
         self.cursor.execute(UserQueries.GET_USER_BY_ID.value, (user_id,))
-        return self._row_to_user(self.cursor.fetchone())
+        return self.convert_row_to_user(self.cursor.fetchone())
 
     def does_user_exist(self, user_id):
         self.cursor.execute(UserQueries.USER_EXISTS.value, (user_id,))
@@ -43,7 +43,7 @@ class UserDataManager:
 
     def add_a_user(self, name, gender):
         self.cursor.execute(UserQueries.INSERT_USER.value, (name, gender))
-        new_user = self._row_to_user(self.cursor.fetchone())
+        new_user = self.convert_row_to_user(self.cursor.fetchone())
         self.conn.commit()
         return new_user
 
@@ -53,5 +53,5 @@ class UserDataManager:
         return self.get_user_by_id(user_id)
 
     def delete_user(self, user_id):
-        self.cursor.execute(UserQueries.DELETE_USER.value, (str(user_id)))
+        self.cursor.execute(UserQueries.DELETE_USER.value, (user_id))
         self.conn.commit()
