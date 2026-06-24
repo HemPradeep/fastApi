@@ -1,13 +1,18 @@
 import os
+from collections.abc import Generator
+from typing import Any
+
 import psycopg2
 import pytest
 from fastapi.testclient import TestClient
+from psycopg2.extensions import connection
+
 from main import app
 from src.database_connection import get_user_repository
 from src.models.user_db import UserRepository
 
 
-def get_test_connection():
+def get_test_connection() -> connection:
     return psycopg2.connect(
         host=os.getenv("TEST_DB_HOST"),
         database=os.getenv("TEST_DB_NAME"),
@@ -16,15 +21,17 @@ def get_test_connection():
     )
 
 
-def reset_database(conn):
+def reset_database(conn: connection) -> None:
     with conn.cursor() as cursor:
         cursor.execute("DELETE FROM users;")
-        cursor.execute("SELECT setval(pg_get_serial_sequence('users', 'id'), 1, false);")
+        cursor.execute(
+            "SELECT setval(pg_get_serial_sequence('users', 'id'), 1, false);"
+        )
     conn.commit()
 
 
 @pytest.fixture
-def client():
+def client() -> Generator[TestClient, Any, None]:
     conn = get_test_connection()
     repository = UserRepository(conn)
     reset_database(conn)
@@ -35,14 +42,14 @@ def client():
     conn.close()
 
 
-def test_listing_all_users_returns_empty_collection(client):
+def test_listing_all_users_returns_empty_collection(client: TestClient) -> None:
     response = client.get("/api/users")
-    
+
     assert response.status_code == 200
     assert response.json() == []
 
 
-def test_create_user_returns_created_user(client):
+def test_create_user_returns_created_user(client: TestClient) -> None:
     response = client.post(
         "/api/users",
         json={"user": "Hem", "gender": "Male"},
@@ -52,7 +59,7 @@ def test_create_user_returns_created_user(client):
     assert response.json() == {"id": 1, "user": "Hem", "gender": "Male"}
 
 
-def test_get_user_by_id_returns_existing_user(client):
+def test_get_user_by_id_returns_existing_user(client: TestClient) -> None:
     client.post("/api/users", json={"user": "Bob", "gender": "Male"})
 
     response = client.get("/api/users/1")
@@ -61,7 +68,7 @@ def test_get_user_by_id_returns_existing_user(client):
     assert response.json() == {"id": 1, "user": "Bob", "gender": "Male"}
 
 
-def test_update_user_changes_name(client):
+def test_update_user_changes_name(client: TestClient) -> None:
     client.post("/api/users", json={"user": "Charlie", "gender": "Other"})
 
     response = client.put("/api/users/1", json={"user": "Charly"})
@@ -70,7 +77,7 @@ def test_update_user_changes_name(client):
     assert response.json()["user"] == "Charly"
 
 
-def test_delete_user_removes_the_user(client):
+def test_delete_user_removes_the_user(client: TestClient) -> None:
     client.post("/api/users", json={"user": "Dana", "gender": "Female"})
 
     response = client.delete("/api/users/1")
@@ -79,17 +86,17 @@ def test_delete_user_removes_the_user(client):
     assert client.get("/api/users/1").status_code == 404
 
 
-def test_create_user_rejects_invalid_payload(client):
+def test_create_user_rejects_invalid_payload(client: TestClient) -> None:
     response = client.post(
         "/api/users",
-        json={"user": "Alice", "gender": "Female"},
+        json={"user": "Alice123", "gender": "Female"},
     )
 
     assert response.status_code == 400
     assert response.json()["detail"] == "Invalid user data"
 
 
-def test_get_user_by_id_returns_404_for_missing_user(client):
+def test_get_user_by_id_returns_404_for_missing_user(client: TestClient) -> None:
     response = client.get("/api/users/999")
 
     assert response.status_code == 404

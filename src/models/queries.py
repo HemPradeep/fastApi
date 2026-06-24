@@ -1,6 +1,11 @@
-from enum import Enum
+from enum import StrEnum
 
-class UserQueries(str, Enum):
+
+class UserQueries(StrEnum):
+    TRUNCATE_DATA = """
+    TRUNCATE TABLE users RESTART IDENTITY;
+    """
+
     CREATE_TABLE = """
     CREATE TABLE IF NOT EXISTS users (
         id SERIAL PRIMARY KEY,
