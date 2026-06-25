@@ -13,3 +13,6 @@ fix:
 	ruff check . --fix
 typecheck:
 	mypy .
+docker-dev:
+	docker-compose down
+	docker-compose up -d
