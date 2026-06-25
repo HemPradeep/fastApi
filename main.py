@@ -88,3 +88,4 @@ def delete_user(
             status_code=status.HTTP_404_NOT_FOUND, detail=f"invalid userId: {id}"
         )
     manager.delete_user(id)
+
