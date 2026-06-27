@@ -26,7 +26,7 @@ class UserRepository:
     def convert_row_to_user(self, row: Any) -> UserResponse | None:
         if not row:
             return None
-        return UserResponse(id=row['id'], user=row['user_name'], gender=row['gender'])
+        return UserResponse(id=row['id'], user_name=row['user_name'], gender=row['gender'])
 
     def get_all_users(self) -> list[UserResponse]:
         self.cursor.execute(UserQueries.GET_ALL_USERS.value)

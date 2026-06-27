@@ -33,7 +33,7 @@ def test_convert_row_to_user_converts_row_to_dict() -> None:
     response = repo.convert_row_to_user(row)
     assert response is not None
     assert response.id == 1
-    assert response.user == "Alice"
+    assert response.user_name == "Alice"
     assert response.gender == "Female"
 
 
@@ -47,7 +47,7 @@ def test_get_all_users_executes_query_and_returns_users() -> None:
     cursor.fetchall.assert_called_once()
     assert len(users) == 1
     assert users[0].id == 1
-    assert users[0].user == "Alice"
+    assert users[0].user_name == "Alice"
     assert users[0].gender == "Female"
     assert conn.commit.call_count == 1
 
@@ -63,7 +63,7 @@ def test_get_user_by_id_returns_matching_user() -> None:
     )
     assert user is not None
     assert user.id == 2
-    assert user.user == "Bob"
+    assert user.user_name == "Bob"
     assert user.gender == "Male"
 
 
@@ -86,7 +86,7 @@ def test_add_a_user_inserts_and_returns_new_user() -> None:
     )
     assert user is not None
     assert user.id == 4
-    assert user.user == "Dana"
+    assert user.user_name == "Dana"
     assert user.gender == "Other"
 
 
@@ -101,7 +101,7 @@ def test_update_user_name_updates_and_returns_user() -> None:
     )
     assert user is not None
     assert user.id == 5
-    assert user.user == "Diana"
+    assert user.user_name == "Diana"
     assert user.gender == "Female"
 
 
